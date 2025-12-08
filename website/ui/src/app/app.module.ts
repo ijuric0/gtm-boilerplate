@@ -17,7 +17,6 @@
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {GoogleTagManagerModule} from 'angular-google-tag-manager';
 
 import {environment} from 'src/environments/environment';
 import {AppRoutingModule} from './app-routing.module';
@@ -52,10 +51,6 @@ import {TopBarComponent} from './components/top-bar/top-bar.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    GoogleTagManagerModule.forRoot({
-      id: environment.gtmContainerId,
-      gtm_resource_path: environment.gtmResourcePath,
-    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
