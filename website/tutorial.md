@@ -39,6 +39,9 @@ Variable             | Description
 currency             | This is the currency used for all products and tagging/conversions
 localCode            | This is used to determine the pricing number format.
 gtmContainerId       | Paste your GTM Web Container ID here (formatted as GTM-XXXXXX)
+gtagId               | Paste your GA Measurement ID
+firstPartyUrl        | Paste your URL for first-party script serving
+serverContainerUrl   | Paste your sGTM endpoint URL
 
 After that, let's get the deployment started.
 
