@@ -3,6 +3,7 @@ import { environment } from '../environments/environment';
 declare global {
   interface Window {
     dataLayer: any[];
+    gtag: (...args: any[]) => void;
   }
 }
 
@@ -13,20 +14,44 @@ export function loadGtmScripts(): void {
     return null;
   }
 
-  const loadGtag = getCookie('gtag') === 'true';
-  const useFirstParty = getCookie('gtg') === 'true';
-  const scriptDomain = useFirstParty ? environment.firstPartyUrl : 'https://www.googletagmanager.com';
+  const tagType = getCookie('tag-type');
+  let loadGtag = false;
+  let scriptDomain = 'https://www.googletagmanager.com';
+  let useFirstParty = false;
+
+  switch (tagType) {
+    case 'gtag':
+      loadGtag = true;
+      break;
+
+    case 'gtag-gtg':
+      loadGtag = true;
+      useFirstParty = true;
+      scriptDomain = environment.firstPartyUrl;
+      break;
+
+    case 'gtm-gtg':
+      loadGtag = false;
+      useFirstParty = true;
+      scriptDomain = environment.firstPartyUrl;
+      break;
+
+    default:
+      loadGtag = false;
+      useFirstParty = false;
+      scriptDomain = 'https://www.googletagmanager.com';
+      break;
+  }
+
+  console.log(`🚀 Loading ${loadGtag ? 'GTAG' : 'GTM'} (${useFirstParty ? 'First-Party' : 'Default'}) 🚀 `);
 
   if (loadGtag) {
-    console.log(`🚀 Loading GTAG (${useFirstParty ? 'First party' : '3rd Party'}) 🚀`);
-
     const libScript = document.createElement('script');
     libScript.async = true;
     libScript.src = `${scriptDomain}/gtag/js?id=${environment.gtagId}`;
     document.head.insertBefore(libScript, document.head.firstChild);
 
     const configScript = document.createElement('script');
-    configScript.id = 'gtag-init';
 
     const configParams: any = {};
     if (useFirstParty) {
@@ -35,21 +60,19 @@ export function loadGtmScripts(): void {
 
     const scriptContent = [
       `window.dataLayer = window.dataLayer || [];`,
-      `function gtag(){dataLayer.push(arguments);}`,
+      `function gtag(){dataLayer.push(arguments);}`, 
       `gtag('js', new Date());`,
       `gtag('config', '${environment.gtagId}', ${JSON.stringify(configParams)});`
     ].join('\n');
 
     configScript.textContent = scriptContent;
-
+    
     if (libScript.parentNode) {
-      libScript.parentNode.insertBefore(configScript, libScript.nextSibling);
+        libScript.parentNode.insertBefore(configScript, libScript.nextSibling);
     }
 
   } else {
-    console.log(`🚀 Loading GTM (${useFirstParty ? 'First party' : '3rd party'}) 🚀`);
-
-    (function (w: any, d: Document, s: string, l: string, i: string) {
+    (function(w: any, d: Document, s: string, l: string, i: string) {
       w[l] = w[l] || [];
       w[l].push({
         'gtm.start': new Date().getTime(),
