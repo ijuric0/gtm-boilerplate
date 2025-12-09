@@ -30,7 +30,8 @@ export const environment = {
   // The ID of the container in Google Tag Manager, e.g. GTM-XXXXXXXX
   gtmContainerId: 'GTM-XXXXXXXX',
   gtagId: 'G-YYYYYYY',
-  firstPartyUrl: 'https://www.googletagmanager.com',
+  firstPartyUrlServer: 'https://www.googletagmanager.com',
+  firstPartyUrlCdn: 'https://www.googletagmanager.com',
   serverContainerUrl: 'https://example.com',
   //The path the scripts are loaded from. Change for loading scripts from your server instead (https://developers.google.com/tag-platform/tag-manager/server-side/dependency-serving)
 };
